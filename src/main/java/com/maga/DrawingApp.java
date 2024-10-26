@@ -24,7 +24,7 @@ public class DrawingApp {
                 ImageIcon eraserIcon = new ImageIcon(getClass().getClassLoader().getResource("assets/eraser.png"));
                 ImageIcon fillBucketIcon = new ImageIcon(getClass().getClassLoader().getResource("assets/fillBucket.png"));
 
-                JFrame frame = new JFrame("Scrollable Drawing App");
+                JFrame frame = new JFrame("Drawing App by maga");
                 frame.setIconImage(pencilIcon.getImage());;
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setSize(800, 600);
