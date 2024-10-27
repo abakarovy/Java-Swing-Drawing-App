@@ -4,7 +4,7 @@ A drawing application created using Java's builtin Swing UI library, with Maven
 
 
 ## How to use
-You can open an executable ```demo.jar``` file that resides in the project root folder to run the program
+You can open an executable ```app.jar``` file that resides in the project root folder to run the program
 ***(JAVA_HOME environment variable is required)***
 
 
