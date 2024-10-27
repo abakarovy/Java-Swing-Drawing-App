@@ -27,7 +27,7 @@ javac -d [your output folder for compiled classes] .\src\main\java\com\maga\*.ja
 
 Then, to run the build, you can either execute this command on the compiled .class files: <br>
 ```
-java -classpath "[путь к скомпилированным файлам];./src/main/resources" com.maga.DrawingApp
+java -classpath "[path to compiled .class files];./src/main/resources" com.maga.DrawingApp
 ```
 <!-- <pre><code><span style="color: red;">java</span> <span style="color: grey;">-classpath</span> <span style="color: cyan;">"[path to compiled .class files];./src/main/resources"</span> <span style="color: cyan;">com.maga.DrawingApp</span></code></pre> -->
 
