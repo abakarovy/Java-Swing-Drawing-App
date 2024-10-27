@@ -27,13 +27,9 @@ class DrawingPanel extends JPanel {
     private Stack<BufferedImage> canvasStack = new Stack<BufferedImage>();
     private Stack<BufferedImage> undoStack = new Stack<BufferedImage>();
 
-    // Constants for centering the canvas
-    private static final int INITIAL_CANVAS_WIDTH = 1600;
-    private static final int INITIAL_CANVAS_HEIGHT = 1200;
-
-    public DrawingPanel() {
+    public DrawingPanel(int width, int height) {
         // Initialize the canvas based on initial panel size
-        canvas = new BufferedImage(INITIAL_CANVAS_WIDTH, INITIAL_CANVAS_HEIGHT, BufferedImage.TYPE_INT_ARGB); // Larger initial canvas
+        canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB); // Larger initial canvas
         clearCanvas();
 
         // Mouse listeners for drawing

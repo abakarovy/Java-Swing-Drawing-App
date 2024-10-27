@@ -26,7 +26,7 @@ public class DrawingApp {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setSize(800, 600);
         
-                DrawingPanel drawingPanel = new DrawingPanel();
+                DrawingPanel drawingPanel = new DrawingPanel(1600, 1200);
                 JScrollPane scrollPane = new JScrollPane(drawingPanel); // Scrollable canvas
                 scrollPane.getVerticalScrollBar().setUnitIncrement(20);
                 scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
