@@ -21,12 +21,12 @@ This generates a .jar file with execute permissions
 ### Without Maven
 To build the project without using maven you have to compile the java code under `src`: <br>
 
-```sh
+```
 javac -d [your output folder for compiled classes] .\src\main\java\com\maga\*.java
 ```
 
 Then, to run the build, you can either execute this command on the compiled .class files: <br>
-```sh
+```
 java -classpath "[path to compiled .class files];./src/main/resources" com.maga.DrawingApp
 ```
 
