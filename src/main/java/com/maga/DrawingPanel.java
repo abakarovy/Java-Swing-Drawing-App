@@ -19,7 +19,6 @@ class DrawingPanel extends JPanel {
     public Tool selectedTool = Tool.PENCIL;
     public Color currentColor = Color.BLACK;
     public transient BufferedImage canvas;
-    private transient BufferedImage patternImage;
     public int brushSize = 5;
 
     public double zoomFactor = 1;
@@ -36,12 +35,6 @@ class DrawingPanel extends JPanel {
         // Initialize the canvas based on initial panel size
         canvas = new BufferedImage(INITIAL_CANVAS_WIDTH, INITIAL_CANVAS_HEIGHT, BufferedImage.TYPE_INT_ARGB); // Larger initial canvas
         clearCanvas();
-
-        try {
-            patternImage = ImageIO.read(new File("assets/opacityPattern.png"));
-        } catch (IOException e) {
-            patternImage = copyCanvas(canvas);
-        }
 
         // Mouse listeners for drawing
         MouseAdapter mouseHandler = new MouseAdapter() {
@@ -206,7 +199,6 @@ class DrawingPanel extends JPanel {
         Graphics2D g2d = canvas.createGraphics();
         g2d.setComposite(AlphaComposite.Clear); // Set composite to clear for erasing
         g2d.fillOval(point.x - brushSize / 2, point.y - brushSize / 2, brushSize, brushSize);
-        drawPatternOnErasedArea(point, brushSize);
         g2d.dispose();
     }
 
@@ -240,27 +232,6 @@ class DrawingPanel extends JPanel {
         int x = (int) (screenPoint.x / zoomFactor) - offsetX;
         int y = (int) (screenPoint.y / zoomFactor) - offsetY;
         return new Point(x, y);
-    }
-
-    private void drawPatternOnErasedArea(Point point, int size) {
-        Graphics2D g2d = canvas.createGraphics();
-        g2d.setComposite(AlphaComposite.SrcOver); // Use SrcOver to blend the pattern
-        
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
-                // Only draw the pattern in the erased area (where the original color was fully transparent)
-                int canvasX = point.x + x - size / 2;
-                int canvasY = point.y + y - size / 2;
-
-                if (canvasX >= 0 && canvasX < canvas.getWidth() && canvasY >= 0 && canvasY < canvas.getHeight()) {
-                    Color pixelColor = new Color(patternImage.getRGB(x % patternImage.getWidth(), y % patternImage.getHeight()), true);
-                    if (pixelColor.getAlpha() > 0) {
-                        canvas.setRGB(canvasX, canvasY, pixelColor.getRGB());
-                    }
-                }
-            }
-        }
-        g2d.dispose();
     }
 
     @Override
