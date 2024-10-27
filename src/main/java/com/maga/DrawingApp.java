@@ -1,14 +1,11 @@
 package com.maga;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class DrawingApp {
     
@@ -37,9 +34,9 @@ public class DrawingApp {
                 scrollPane.addMouseWheelListener(e -> {
                     if (e.isControlDown()) {
                         if (e.getPreciseWheelRotation() < 0) {
-                            double zoomFactor = drawingPanel.zoomIn();
+                            drawingPanel.zoomIn();
                         } else {
-                            double zoomFactor = drawingPanel.zoomOut();
+                            drawingPanel.zoomOut();
                         }
                         e.consume(); // Prevent scrolling while zooming
                     } else {

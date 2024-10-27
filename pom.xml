@@ -7,6 +7,11 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -15,8 +20,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                        <addClasspath>true</addClasspath>
-                        <mainClass>com.maga.DrawingApp</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.maga.DrawingApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -26,7 +31,6 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <!-- <includes><include>*.png</include></includes> -->
             </resource>
         </resources>
     </build>
