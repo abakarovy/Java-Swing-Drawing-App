@@ -15,15 +15,11 @@
 
 ### Без Maven
 Для сборки проекта без Maven нужно скомпилировать java код, который находится под `src` папкой: <br>
-```sh
+```bash
 javac -d [папка в которую хотите поместить скомпилированные класса] .\src\main\java\com\maga\*.java
 ```
 После, для использования новой сборки, можно сразу выполнить эту команду на скомпилированых .class файлах: <br>
-
-```sh
-java -classpath "[путь к скомпилированным файлам];./src/main/resources" com.maga.DrawingApp
-```
-<!-- 
-<pre><code><span style="color: red;">java</span> <span style="color: grey;">-classpath</span> <span style="color: cyan;">"[путь к скомпилированным файлам];./src/main/resources"</span> <span style="color: cyan;">com.maga.DrawingApp</span></code></pre> -->
+ 
+<pre><code><span style="color: red;">java</span> <span style="color: grey;">-classpath</span> <span style="color: cyan;">"[путь к скомпилированным файлам];./src/main/resources"</span> <span style="color: cyan;">com.maga.DrawingApp</span></code></pre>
 
 либо же собрать .jar файл из этих файлов
