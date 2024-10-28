@@ -92,6 +92,7 @@ class DrawingPanel extends JPanel {
         Graphics2D g2d = canvas.createGraphics();
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        canvasStack.addLast(copyCanvas(canvas));
         g2d.dispose();
     }
 
@@ -183,11 +184,20 @@ class DrawingPanel extends JPanel {
         }
     }
 
+    public void setTool(Tool tool) {
+        selectedTool = tool;
+    }
+
     private void drawOnCanvas(Point point, Color color) {
         Graphics2D g2d = canvas.createGraphics();
         g2d.setColor(color);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, color.getAlpha() / 255.0f));
-        g2d.fillOval(point.x - brushSize / 2, point.y - brushSize / 2, brushSize, brushSize);
+
+        if (brushSize == 1) {
+            g2d.fillRect(point.x, point.y, 1, 1);
+        } else {
+            g2d.fillOval(point.x - brushSize / 2, point.y - brushSize / 2, brushSize, brushSize);
+        }
         g2d.dispose();
     }
 
@@ -238,6 +248,7 @@ class DrawingPanel extends JPanel {
 
         int offsetX = (getWidth() - (int)(canvas.getWidth() * zoomFactor)) / 2; // Center the canvas horizontally
         int offsetY = (getHeight() - (int)(canvas.getHeight() * zoomFactor)) / 2; // Center the canvas vertically
+        System.out.println(offsetX);
         g2d.drawImage(canvas, offsetX, offsetY, null);
 
         g2d.drawArc(mousePos.x - brushSize/2 + offsetX, mousePos.y - brushSize/2 + offsetY, brushSize, brushSize, 0, 360);
