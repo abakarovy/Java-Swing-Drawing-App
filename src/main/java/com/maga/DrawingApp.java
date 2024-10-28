@@ -42,6 +42,7 @@ public class DrawingApp extends JFrame {
                 } else {
                     drawingPanel.zoomOut();
                 }
+                scrollPane.getViewport().setViewPosition(getMousePosition());
                 e.consume(); // Prevent scrolling while zooming
             } else {
                 // Allow scrolling when Ctrl is not pressed

@@ -1,7 +1,6 @@
 package com.maga;
 
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
