@@ -33,6 +33,7 @@ public class DrawingApp extends JFrame {
 
         drawingPanel = new DrawingPanel(canvasWidth, canvasHeight);
         JScrollPane scrollPane = new JScrollPane(drawingPanel); // makes canvas scrollable
+        scrollPane.setAutoscrolls(true);
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
         scrollPane.addMouseWheelListener(e -> {
@@ -42,10 +43,13 @@ public class DrawingApp extends JFrame {
                 } else {
                     drawingPanel.zoomOut();
                 }
+                // TODO: the scroll pane doesnt set the view position to where the mouse is positioned,
+                //       it does at the beginning and then it zooms into the top left corner for some reason
                 scrollPane.getViewport().setViewPosition(getMousePosition());
-                e.consume(); // Prevent scrolling while zooming
+                e.consume(); // prevents scrolling while zooming
             } else {
-                // Allow scrolling when Ctrl is not pressed
+                // TODO: for some reason when you zoom in, the scroll bar (the vertical one) is still scrolling,
+                //       its hardly noticeable but pretty sure it happens
                 scrollPane.dispatchEvent(e);
             }
         });

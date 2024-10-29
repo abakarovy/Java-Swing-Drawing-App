@@ -17,15 +17,15 @@ public class SetupFrame extends JFrame {
         setTitle("Canvas Setup");
         setSize(300, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center the window
+        setLocationRelativeTo(null); // centers the window
 
-        // Create input fields
+        // creates labels and text fields
         JLabel widthLabel = new JLabel("Canvas Width:");
         JLabel heightLabel = new JLabel("Canvas Height:");
-        widthField = new JTextField("1200", 10); // Default width
-        heightField = new JTextField("800", 10); // Default height
+        widthField = new JTextField("1200", 10); // default width
+        heightField = new JTextField("800", 10); // default height
 
-        // Create Start button
+        // creates start buttons
         JButton startButton = new JButton("Start Drawing");
         startButton.addActionListener(e -> {
             try {
@@ -37,7 +37,6 @@ public class SetupFrame extends JFrame {
             }
         });
 
-        // Arrange components in a grid
         setLayout(new GridLayout(3, 2, 5, 5));
         add(widthLabel);
         add(widthField);
@@ -49,8 +48,8 @@ public class SetupFrame extends JFrame {
     }
 
     private void openDrawingApp(int width, int height) {
-        new DrawingApp(width, height); // Open the main drawing app with specified dimensions
-        dispose(); // Close the setup window
+        new DrawingApp(width, height); // opens the main drawing app with specified dimensions
+        dispose(); // closes the setup frame
     }
 
     public static void main(String[] args) {

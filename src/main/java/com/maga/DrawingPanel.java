@@ -13,8 +13,7 @@ import java.util.Queue;
 import java.util.Stack;
 
 class DrawingPanel extends JPanel {
-    private static final long serialVersionUID = 1L; // Add this line
-    // public enum Tool { PENCIL, ERASER, FILL_BUCKET }
+    private static final long serialVersionUID = 1L; // to fix some strange compilaton warning
 
     public Tool selectedTool = Tool.PENCIL;
     public Color currentColor = Color.BLACK;
@@ -28,11 +27,11 @@ class DrawingPanel extends JPanel {
     private Stack<BufferedImage> undoStack = new Stack<BufferedImage>();
 
     public DrawingPanel(int width, int height) {
-        // Initialize the canvas based on initial panel size
-        canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB); // Larger initial canvas
+        // initializes the canvas based on initial panel size
+        canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         clearCanvas();
 
-        // Mouse listeners for drawing
+        // mouse listeners for drawing
         MouseAdapter mouseHandler = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -44,9 +43,6 @@ class DrawingPanel extends JPanel {
             @Override
             public void mouseMoved(MouseEvent e) {
                 mousePos = toCanvasPoint(e.getPoint());
-                // if (selectedTool == Tool.FILL_BUCKET) {
-                //     setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-                // }
                 repaint();
             }
 
@@ -60,6 +56,7 @@ class DrawingPanel extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 canvasStack.addLast(copyCanvas(canvas));
+                // should probably add a size limit to the stack but have to figure out how to do it without breaking the (First In Last Out) rules of the stack
                 // if (canvasStack.size() > 100) {
                 //     canvasStack.remove(canvasStack.size() - 1);
                 // }
@@ -69,8 +66,8 @@ class DrawingPanel extends JPanel {
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
 
-        mousePos = new Point(0,0);
-
+        
+        // adds undo and redo on ctrl+z and ctrl+y
         this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ctrl Z"), "undo");
         this.getActionMap().put("undo", new AbstractAction() {
             @Override
@@ -78,7 +75,7 @@ class DrawingPanel extends JPanel {
                 undo();
             }
         });
-
+        
         this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ctrl Y"), "redo");
         this.getActionMap().put("redo", new AbstractAction() {
             @Override
@@ -86,8 +83,12 @@ class DrawingPanel extends JPanel {
                 redo();
             }
         });
+        
+        // sets mouse position to 0,0
+        mousePos = new Point(0,0);
     }
-
+    
+    // canvas methods
     public void clearCanvas() {
         Graphics2D g2d = canvas.createGraphics();
         g2d.setColor(Color.WHITE);
@@ -95,32 +96,53 @@ class DrawingPanel extends JPanel {
         canvasStack.addLast(copyCanvas(canvas));
         g2d.dispose();
     }
+    private BufferedImage copyCanvas(BufferedImage canvas) {
+        BufferedImage newCanvas = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        
+        Graphics2D g2d = newCanvas.createGraphics();
+        g2d.drawImage(canvas, 0,0, null);
+        g2d.dispose();
+        
+        return newCanvas;
+    }
+    public void saveCanvas(Component parent) {
+        String userName = System.getProperty("user.name");
+        
+        // shows file chooser to save the canvas
+        JFileChooser fileChooser = new JFileChooser(String.format("C:\\Users\\%s\\Pictures", userName));
+        fileChooser.setDialogTitle("Save Image");
+
+        int userSelection = fileChooser.showSaveDialog(parent);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            try {
+                // saves as PNG
+                ImageIO.write(canvas, "png", new File(fileToSave.getAbsolutePath() + ".png"));
+                JOptionPane.showMessageDialog(parent, "Image saved successfully.");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(parent, "Error saving image: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 
     public void undo() {
         if (!canvasStack.isEmpty()) {
             BufferedImage undoneCanvas = canvasStack.pop();
             if (canvasStack.isEmpty()) {
                 clearCanvas();
-                // canvas = createEmptyCanvas();
             } else {
                 canvas = copyCanvas(canvasStack.peek());
             }
             undoStack.addLast(undoneCanvas);
-            repaint(); // Repaint after undo
+            repaint(); // repaint after undo
         }
     }
-
     public void redo() {
         if (!undoStack.isEmpty()) {
             BufferedImage redoneCanvas = undoStack.pop();
-
-            // if (undoStack.isEmpty()) {
-            //     clearCanvas();
-            // } else {
-                canvas = redoneCanvas;
-            // }
+            canvas = redoneCanvas;
             canvasStack.addLast(redoneCanvas);
-            repaint(); // Repaint after undo
+            repaint(); // repaint after redo
         }
     }
 
@@ -131,7 +153,6 @@ class DrawingPanel extends JPanel {
 
         return zoomFactor;
     }
-
     public double zoomOut() {
         if (zoomFactor > 0.1) {
             zoomFactor -= 0.1;
@@ -141,34 +162,7 @@ class DrawingPanel extends JPanel {
         return zoomFactor;
     }
 
-    private BufferedImage copyCanvas(BufferedImage canvas) {
-        BufferedImage newCanvas = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D g2d = newCanvas.createGraphics();
-        g2d.drawImage(canvas, 0,0, null);
-        g2d.dispose();
-
-        return newCanvas;
-    }
-
-    public void saveCanvas(Component parent) {
-        String userName = System.getProperty("user.name");
-        // Show file chooser to save the canvas
-        JFileChooser fileChooser = new JFileChooser(String.format("C:\\Users\\%s\\Pictures", userName));
-        fileChooser.setDialogTitle("Save Image");
-
-        int userSelection = fileChooser.showSaveDialog(parent);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-            try {
-                // Save as PNG
-                ImageIO.write(canvas, "png", new File(fileToSave.getAbsolutePath() + ".png"));
-                JOptionPane.showMessageDialog(parent, "Image saved successfully.");
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(parent, "Error saving image: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
 
     private void applyCurrentTool(Point point) {
         switch (selectedTool) {
@@ -183,7 +177,6 @@ class DrawingPanel extends JPanel {
                 break;
         }
     }
-
     public void setTool(Tool tool) {
         selectedTool = tool;
     }
@@ -200,14 +193,12 @@ class DrawingPanel extends JPanel {
         }
         g2d.dispose();
     }
-
     private void eraseOnCanvas(Point point) {
         Graphics2D g2d = canvas.createGraphics();
-        g2d.setComposite(AlphaComposite.Clear); // Set composite to clear for erasing
+        g2d.setComposite(AlphaComposite.Clear); // set composite to clear for erasing
         g2d.fillOval(point.x - brushSize / 2, point.y - brushSize / 2, brushSize, brushSize);
         g2d.dispose();
     }
-
     private void floodFill(Point start, Color targetColor) {
         int targetRGB = canvas.getRGB(start.x, start.y);
         int replacementRGB = targetColor.getRGB();
@@ -232,35 +223,35 @@ class DrawingPanel extends JPanel {
         }
     }
 
-    private Point toCanvasPoint(Point screenPoint) {
-        int offsetX = (getWidth() - (int)(canvas.getWidth() * zoomFactor)) / 2; // Center the canvas horizontally
-        int offsetY = (getHeight() - (int)(canvas.getHeight() * zoomFactor)) / 2; // Center the canvas vertically
+    public Point toCanvasPoint(Point screenPoint) {
+        int offsetX = (getWidth() - (int)(canvas.getWidth() * zoomFactor)) / 2; // center the canvas horizontally
+        int offsetY = (getHeight() - (int)(canvas.getHeight() * zoomFactor)) / 2; // center the canvas vertically
         int x = (int) (screenPoint.x / zoomFactor) - offsetX;
         int y = (int) (screenPoint.y / zoomFactor) - offsetY;
         return new Point(x, y);
     }
-
+    
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension((int) (canvas.getWidth() * zoomFactor), (int) (canvas.getHeight() * zoomFactor));
+    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.scale(zoomFactor, zoomFactor);
 
-        int offsetX = (getWidth() - (int)(canvas.getWidth() * zoomFactor)) / 2; // Center the canvas horizontally
-        int offsetY = (getHeight() - (int)(canvas.getHeight() * zoomFactor)) / 2; // Center the canvas vertically
-        System.out.println(offsetX);
+        int offsetX = (getWidth() - (int)(canvas.getWidth() * zoomFactor)) / 2; // center the canvas horizontally
+        int offsetY = (getHeight() - (int)(canvas.getHeight() * zoomFactor)) / 2; // center the canvas vertically
         g2d.drawImage(canvas, offsetX, offsetY, null);
 
         g2d.drawArc(mousePos.x - brushSize/2 + offsetX, mousePos.y - brushSize/2 + offsetY, brushSize, brushSize, 0, 360);
 
         g2d.setFont(new Font("Default", 0, (int) (30/zoomFactor)));
+
+        // TODO: replace this with a label at the tool bar, or make it so that the text doesnt disappear when you zoom in
         g2d.drawString(String.format("( %d, %d )", mousePos.x, mousePos.y), (int) (30/zoomFactor), (int) (30/zoomFactor));
 
         g2d.dispose();
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension((int) (canvas.getWidth() * zoomFactor), (int) (canvas.getHeight() * zoomFactor));
     }
 }
