@@ -1,7 +1,9 @@
-package com.maga;
+package com.maga.view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import com.maga.model.Tool;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -12,7 +14,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-class DrawingPanel extends JPanel {
+public class DrawingPanel extends JPanel {
     private static final long serialVersionUID = 1L; // to fix some strange compilaton warning
 
     public Tool selectedTool = Tool.PENCIL;
@@ -23,6 +25,7 @@ class DrawingPanel extends JPanel {
     public double zoomFactor = 1;
 
     private Point mousePos;
+    
     private Stack<BufferedImage> canvasStack = new Stack<BufferedImage>();
     private Stack<BufferedImage> undoStack = new Stack<BufferedImage>();
 
@@ -87,6 +90,11 @@ class DrawingPanel extends JPanel {
         // sets mouse position to 0,0
         mousePos = new Point(0,0);
     }
+
+    public void loadImage(Component parent, BufferedImage img) {
+        Graphics2D g2d = canvas.createGraphics();
+        g2d.drawImage(img, 0, 0, null);
+    }
     
     // canvas methods
     public void clearCanvas() {
@@ -98,11 +106,10 @@ class DrawingPanel extends JPanel {
     }
     private BufferedImage copyCanvas(BufferedImage canvas) {
         BufferedImage newCanvas = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        
         Graphics2D g2d = newCanvas.createGraphics();
         g2d.drawImage(canvas, 0,0, null);
         g2d.dispose();
-        
+
         return newCanvas;
     }
     public void saveCanvas(Component parent) {
@@ -123,6 +130,11 @@ class DrawingPanel extends JPanel {
                 JOptionPane.showMessageDialog(parent, "Error saving image: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    public void changeSize(int width, int height) {
+        canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        clearCanvas();
     }
 
     public void undo() {

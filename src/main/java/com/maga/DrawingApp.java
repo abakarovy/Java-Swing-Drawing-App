@@ -1,9 +1,12 @@
 package com.maga;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JToolBar;
@@ -11,10 +14,16 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.maga.model.Tool;
+import com.maga.view.DrawingPanel;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class DrawingApp extends JFrame {
     private DrawingPanel drawingPanel;
@@ -102,6 +111,28 @@ public class DrawingApp extends JFrame {
         
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(e -> drawingPanel.saveCanvas(this));
+
+        JButton openButton = new JButton("Open");
+        openButton.addActionListener(e -> {
+            String userName = System.getProperty("user.name");
+            
+            // shows file chooser to open a pic
+            JFileChooser fileChooser = new JFileChooser(String.format("C:\\Users\\%s\\Pictures", userName));
+            fileChooser.setDialogTitle("Save Image");
+            
+            int userSelection = fileChooser.showSaveDialog(this);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToOpen = fileChooser.getSelectedFile();
+
+                try {
+                    BufferedImage img = ImageIO.read(fileToOpen);
+                    drawingPanel.changeSize(img.getWidth(), img.getHeight());
+                    drawingPanel.loadImage(this, img);
+                } catch (IOException er) {
+                    JOptionPane.showMessageDialog(this, er, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
         
         toolBar.add(colorPickerButton);
         toolBar.add(pencilButton);
@@ -110,6 +141,7 @@ public class DrawingApp extends JFrame {
         toolBar.add(brushSizeSlider);
         toolBar.add(clearButton);        
         toolBar.add(saveButton);
+        toolBar.add(openButton);
         
 
         add(scrollPane, BorderLayout.CENTER);
