@@ -4,6 +4,7 @@ A drawing application created using Java's builtin Swing UI library, with Maven
 
 
 ## How to use
+Install the app using ```setup.exe```, the installation will be located in ```C:\Program Files\SetupFrame```
 You can open an executable ```app.jar``` file that resides in the project root folder to run the program
 ***(JAVA_HOME environment variable is required)***
 
