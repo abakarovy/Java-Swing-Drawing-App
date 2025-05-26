@@ -131,6 +131,26 @@ public class DrawingPanel extends JPanel {
             }
         }
     }
+    public void openCanvas(Component parent) {
+        String userName = System.getProperty("user.name");
+
+        // shows file chooser to open a pic
+            JFileChooser fileChooser = new JFileChooser(String.format("C:\\Users\\%s\\Pictures", userName));
+            fileChooser.setDialogTitle("Open Image");
+            
+            int userSelection = fileChooser.showOpenDialog(this);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToOpen = fileChooser.getSelectedFile();
+
+                try {
+                    BufferedImage img = ImageIO.read(fileToOpen);
+                    this.changeSize(img.getWidth(), img.getHeight());
+                    this.loadImage(this, img);
+                } catch (IOException er) {
+                    JOptionPane.showMessageDialog(this, er, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+    }
 
     public void changeSize(int width, int height) {
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

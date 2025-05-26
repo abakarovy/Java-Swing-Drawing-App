@@ -113,26 +113,7 @@ public class DrawingApp extends JFrame {
         saveButton.addActionListener(e -> drawingPanel.saveCanvas(this));
 
         JButton openButton = new JButton("Open");
-        openButton.addActionListener(e -> {
-            String userName = System.getProperty("user.name");
-            
-            // shows file chooser to open a pic
-            JFileChooser fileChooser = new JFileChooser(String.format("C:\\Users\\%s\\Pictures", userName));
-            fileChooser.setDialogTitle("Save Image");
-            
-            int userSelection = fileChooser.showSaveDialog(this);
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToOpen = fileChooser.getSelectedFile();
-
-                try {
-                    BufferedImage img = ImageIO.read(fileToOpen);
-                    drawingPanel.changeSize(img.getWidth(), img.getHeight());
-                    drawingPanel.loadImage(this, img);
-                } catch (IOException er) {
-                    JOptionPane.showMessageDialog(this, er, "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+        openButton.addActionListener(e -> drawingPanel.openCanvas(this));
         
         toolBar.add(colorPickerButton);
         toolBar.add(pencilButton);
