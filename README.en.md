@@ -33,3 +33,8 @@ java -classpath "[path to compiled .class files];./src/main/resources" com.maga.
 <!-- <pre><code><span style="color: red;">java</span> <span style="color: grey;">-classpath</span> <span style="color: cyan;">"[path to compiled .class files];./src/main/resources"</span> <span style="color: cyan;">com.maga.DrawingApp</span></code></pre> -->
 
 or you can build a jar file using the previously compiled .class files
+```jar cvfe app.jar JavaSwing-DrawingApp *.class```
+
+
+To bundle the jar file into an exe installer file, you can use ```jpackage```, using the following command (recommended)
+```jpackage --input . --type exe --main-jar JavaSwing-DrawingApp.jar --win-dir-chooser --win-menu --win-shortcut --win-upgrade-uuid <your-uuid-string>```

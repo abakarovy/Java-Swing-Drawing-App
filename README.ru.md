@@ -28,3 +28,9 @@ java -classpath "[путь к скомпилированным файлам];./s
 <pre><code><span style="color: red;">java</span> <span style="color: grey;">-classpath</span> <span style="color: cyan;">"[путь к скомпилированным файлам];./src/main/resources"</span> <span style="color: cyan;">com.maga.DrawingApp</span></code></pre> -->
 
 либо же собрать .jar файл из этих файлов
+```jar cvfe app.jar JavaSwing-DrawingApp *.class```
+
+
+
+Для сборки jar файла в exe установщик, рекомендуется использовать ```jpackage```
+```jpackage --input . --type exe --main-jar JavaSwing-DrawingApp.jar --win-dir-chooser --win-menu --win-shortcut --win-upgrade-uuid <ваш-uuid>```
